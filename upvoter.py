@@ -5,16 +5,13 @@ import winsound
 # Create the Reddit instance
 reddit = praw.Reddit('bot1')
 
-subs = ["free_karma", "learnpython", "python", "wholesomememes"]
 
-terms = ["pls", "plz", "please", "thank you", "thanks"]
-
-count = 20
+count = 500
 
 run_count = 0
 
-log_file = "upvoted.txt"
-width = 50
+log_file = "data_upvoted.dat"
+width = 60
 lines = 40
 
 #define cosole size and color
@@ -22,6 +19,24 @@ os.system("mode con: cols=" + str(width) + " lines=" + str(lines))
 os.system("color F")
 os.system("cls")
 os.system("echo off")
+
+data_subreddits = open("data_subreddits.dat", "r")
+subs = data_subreddits.read()
+subs = subs.split("\n")
+subs = list(filter(None, subs))
+for sub in subs:
+    if sub.startswith("#"):
+        print (("Removing Subreddit: "+sub).center(width-1))
+        subs.remove(sub)
+
+data_kwords = open("data_kwords.dat", "r")
+terms = data_kwords.read()
+terms = terms.split("\n")
+terms = list(filter(None, terms))
+for term in terms:
+    if term.startswith("#"):
+        print (("Removing Keyword: "+term).center(width-1))
+        terms.remove(term)
 
 def logo():
     print ()
@@ -78,7 +93,7 @@ def start_upvotes():
                         submission.upvote()
                         upvoted.append(submission.id)
                         print(("Upvote "+str(len(upvoted)).zfill(7)+": "+
-                               sub.capitalize()).center(width-1))
+                               sub.capitalize()+" - "+submission.id).center(width-1))
                         beep()
                         #print("Upvote "+str(len(upvoted)).zfill(7)+": "+
                         #      str(subreddit)+" - "+submission.title)
